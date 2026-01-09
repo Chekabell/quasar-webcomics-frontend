@@ -1,6 +1,10 @@
-# WebComic (quasar-webcomics-frontend)
+## Тема проекта **"Вебсайт для чтения комиксов"**
+ФИО - Топорищев Н. А.
+Учебная группа - 609-21
 
-A Quasar Project
+## Theme of project is **"Website for reading comics"**
+Full name - Toporischev N.A.
+Study group - 609-21
 
 ## Install the dependencies
 

@@ -1,81 +1,62 @@
+<script setup lang="ts">
+import { useAuthStore } from 'src/stores/authStore';
+import { useRouter } from 'vue-router';
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const logout = async () => {
+  await authStore.logout();
+  await router.push({
+    name: 'home'
+  });
+}
+
+</script>
+
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+  <q-layout style="height: 100vh;" view="hHh lpr fFf">
+    <q-header>
+      <q-toolbar class="bg-primary text-white shadow-2">
+        <q-btn :to="{ name: 'home' }" stretch flat label="Главная" />
 
-        <q-toolbar-title> Quasar App </q-toolbar-title>
+        <q-space />
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn-dropdown
+          v-if="authStore.isAuthenticated"
+          stretch
+          flat
+          :label=authStore.user?.name
+        >
+          <q-list>
+            <q-item :to="{ name: 'user' }" clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Профиль</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item :to="{ name: 'adding-comics' }" clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Добавить новый комикс</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item @click="logout" clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Выйти из системы</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-btn :to="{ name: 'auth' }" v-else stretch flat label="Войти" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
-
-    <q-page-container>
+    <q-page-container class="fit column justify-center items-center">
       <router-view />
     </q-page-container>
+
+    <q-footer>
+    </q-footer>
   </q-layout>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
-
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-</script>

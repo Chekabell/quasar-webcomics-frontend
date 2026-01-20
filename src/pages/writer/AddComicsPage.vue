@@ -4,12 +4,15 @@ import { useAuthStore } from 'src/stores/authStore';
 import { useComicStore } from 'src/stores/comicStore';
 import { useTagsListStore } from 'src/stores/tagsListStore';
 import { useRouter } from 'vue-router';
-import { QFile } from 'quasar';
+import { QFile, useQuasar } from 'quasar';
+import { useChaptersStore } from 'src/stores/chaptersListStore';
 
 const authStore = useAuthStore();
 const comicStore = useComicStore();
 const tagsListStore = useTagsListStore();
+const chaptersStore = useChaptersStore();
 const router = useRouter();
+const $q = useQuasar();
 
 const types = ['манга', 'манхва', 'маньхуа', 'западное', 'другое'];
 
@@ -18,14 +21,24 @@ const fileInput = ref<QFile | null>(null);
 
 const addComic = async () => {
   if (authStore.user) {
+    comicStore.comic = null;
     await comicStore.addComic();
-    console.log(comicStore.comic)
-    if (comicStore.comic) {
-      console.log(comicStore.comic.id)
+    if (comicStore.comic && comicStore.comicId) {
+      $q.notify({
+          message: 'Комикс успешно создан',
+          color: 'green'
+        });
+      await chaptersStore.getChapters(comicStore.comicId)
       await router.push({
         name: 'comic',
-        params: { comicId: comicStore.comic.id }
+        params: { comicId: comicStore.comicId }
       });
+    }else{
+      $q.notify({
+          message: comicStore.errorMessage,
+          color: 'red'
+        });
+      comicStore.errorMessage = '';
     }
   }
 }

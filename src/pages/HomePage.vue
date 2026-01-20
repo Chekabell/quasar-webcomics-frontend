@@ -10,6 +10,7 @@ const comicStore = useComicStore();
 const authStore = useAuthStore();
 const router = useRouter();
 
+
 const canViewDraft = () => {
   return authStore.user?.role == 'writer' || authStore.user?.role == 'admin'
 }

@@ -48,22 +48,28 @@ export const useComicStore = defineStore('comic', () => {
   async function addComic() {
     if (newTitle.value && newDescription.value && newTags.value && newType.value && newYear.value) {
       const ids = newTags.value.map((item) => item.id);
-      const response = await comicsService.addComic(
-        newTitle.value,
-        newFileCover.value,
-        ids,
-        newType.value,
-        newYear.value,
-        newDescription.value,
-      );
-      console.log(response)
-      comic.value = response.data;
-      newFileCover.value = undefined;
-      newTitle.value =  null;
-      newTags.value = null;
-      newType.value = '';
-      newYear.value = '';
-      newDescription.value = '';
+      try {
+        const response = await comicsService.addComic(
+          newTitle.value,
+          newFileCover.value,
+          ids,
+          newType.value,
+          newYear.value,
+          newDescription.value,
+        );
+        comic.value = response.data;
+        comicId.value = response.data.id;
+        console.log(response);
+        newFileCover.value = undefined;
+        newTitle.value = null;
+        newTags.value = null;
+        newType.value = '';
+        newYear.value = '';
+        newDescription.value = '';
+      } catch (error) {
+        errorMessage.value = (error as ApiError).userMessage;
+        return { success: false, error };
+      }
     }
   }
 

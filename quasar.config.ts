@@ -34,7 +34,7 @@ export default defineConfig((ctx) => {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#build
     build: {
       env: {
-        API_URL: 'http://localhost:8000'
+        API_URL: 'http://localhost:8000',
       },
 
       target: {
@@ -108,14 +108,12 @@ export default defineConfig((ctx) => {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
       config: {
-        brand:
-        {
-          primary: "#212529",
+        brand: {
+          primary: '#212529',
         },
-        screen:
-        {
+        screen: {
           bodyClasses: true,
-        }
+        },
       },
 
       // iconSet: 'material-icons', // Quasar icon set
@@ -130,7 +128,7 @@ export default defineConfig((ctx) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify'],
     },
 
     // animations: 'all', // --- includes all animations

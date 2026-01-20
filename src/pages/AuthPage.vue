@@ -25,7 +25,6 @@ import { ref } from 'vue';
 <template>
     <div v-if="authStore.isAuthenticated">
       <h2>Здравствуйте, {{ authStore.user?.name }}</h2>
-      <q-button round label="Выйти из системы"/>
     </div>
     <div v-else>
       <h2>Вход в систему</h2>

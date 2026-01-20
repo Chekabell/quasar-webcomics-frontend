@@ -3,12 +3,12 @@ import { defineStore } from 'pinia'
 
 import type {Credentials} from 'src/types/authorize'
 import type {ApiError} from 'src/types/api'
-import type {UserData} from 'src/types/user'
+import type {User} from 'src/types/user'
 
 import { authService } from 'src/services/authService'
 
 export const useAuthStore = defineStore('auth', () => {
-  const user = ref<UserData | null>(null)
+  const user = ref<User | null>(null)
   const token = ref(localStorage.getItem('authToken')) || null
   const isAuthenticated = ref(false)
   const errorMessage = ref("")
@@ -39,7 +39,8 @@ export const useAuthStore = defineStore('auth', () => {
         id: response.data.id,
         name: response.data.name,
         email: response.data.email,
-        is_stuff: response.data.is_stuff
+        role: response.data.role,
+        image: response.data.image
       }
       return {success: true, data: response.data}
     }

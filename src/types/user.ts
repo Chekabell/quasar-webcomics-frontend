@@ -1,6 +1,7 @@
-export interface UserData{
-  id: number;
+export interface User{
+  id: string;
   name: string;
   email: string;
-  is_stuff: boolean;
+  role: string;
+  image: string;
 }

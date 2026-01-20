@@ -4,8 +4,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
-    children:
-    [
+    children: [
       {
         path: '',
         name: 'home',
@@ -17,9 +16,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/UserPage.vue'),
       },
       {
-        path: 'comics',
-        name: 'comics',
-        component: () => import('src/pages/ComicsPage.vue'),
+        path: 'comics/:comicId',
+        name: 'comic',
+        component: () => import('src/pages/ComicPage.vue'),
+        props: true,
+      },
+      {
+        path: 'comics/:comicId/chapters/:chapterId',
+        name: 'chapter',
+        component: () => import('src/pages/ChapterPage.vue'),
+        props:true,
       },
       {
         path: 'auth',
@@ -30,10 +36,10 @@ const routes: RouteRecordRaw[] = [
         path: 'writer/add-comics',
         name: 'adding-comics',
         component: () => import('src/pages/writer/AddComicsPage.vue'),
-        meta: {requiresAuth: true}
-      }
-    ]
-  }
+        meta: { requiresAuth: true },
+      },
+    ],
+  },
 ];
 
 export default routes;

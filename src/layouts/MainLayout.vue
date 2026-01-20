@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from 'src/stores/authStore';
+import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
@@ -7,15 +8,28 @@ const router = useRouter();
 
 const logout = async () => {
   await authStore.logout();
-  await router.push({
-    name: 'home'
-  });
+  if(router.currentRoute.value.name == 'home'){
+    router.go(0);
+  } else{
+    await router.push({
+      name: 'home'
+    });
+  }
 }
 
+const canWrite = () =>{
+  return authStore.user?.role == 'writer' || authStore.user?.role == 'admin'
+}
+
+onMounted(async () =>{
+  if(authStore.token != null){
+    await authStore.getUser();
+  }
+})
 </script>
 
 <template>
-  <q-layout style="height: 100vh;" view="hHh lpr fFf">
+  <q-layout view="hHh lpr fFf">
     <q-header>
       <q-toolbar class="bg-primary text-white shadow-2">
         <q-btn :to="{ name: 'home' }" stretch flat label="Главная" />
@@ -23,7 +37,7 @@ const logout = async () => {
         <q-space />
 
         <q-btn-dropdown
-          v-if="authStore.isAuthenticated"
+          v-if="authStore.user"
           stretch
           flat
           :label=authStore.user?.name
@@ -35,7 +49,7 @@ const logout = async () => {
               </q-item-section>
             </q-item>
 
-            <q-item :to="{ name: 'adding-comics' }" clickable v-close-popup>
+            <q-item v-if="canWrite()" :to="{ name: 'adding-comics' }" clickable v-close-popup>
               <q-item-section>
                 <q-item-label>Добавить новый комикс</q-item-label>
               </q-item-section>
@@ -52,7 +66,7 @@ const logout = async () => {
       </q-toolbar>
     </q-header>
 
-    <q-page-container class="fit column justify-center items-center">
+    <q-page-container class="column justify-start items-center">
       <router-view />
     </q-page-container>
 

@@ -53,9 +53,13 @@ onMounted(async () => {
       <div class="left-column">
         <q-img :src="comicStore.comic?.cover_image" alt="картинка" :ratio="3 / 4" class="rounded-borders comic-cover"
           fit="cover" />
-        <q-btn color="primary" label="Читать" class="bg-accent full-width q-mt-md" @click="toReadFirstChapter()" />
-        <div v-show="canRedact()">
-          <q-btn color="secondary" label="Сменить обложку" v-on:click="modalActive = true" class="full-width q-mt-md" />
+        <q-btn class="q-mt-sm" :color="comicStore.comic?.has_chapters ? 'accent' : 'primary'" label="Читать"
+          @click="toReadFirstChapter()" />
+        <div class="column q-gutter-y-md q-pt-md" v-show="canRedact()">
+          <q-btn color="secondary" label="Сменить обложку" v-on:click="modalActive = true" />
+          <q-btn v-if="comicStore.comic?.status == 'draft'" color="secondary" label="Опубликовать"
+            @click="comicStore.publishComic()" />
+          <q-btn color="primary" label="Редактировать" />
           <q-dialog v-model="modalActive" persistent>
             <q-card style="min-width: 350px">
               <q-card-section>
@@ -70,15 +74,12 @@ onMounted(async () => {
                 </q-file>
               </q-card-section>
 
-              <q-card-actions align="right" class="text-primary">
+              <q-card-actions class="text-primary">
                 <q-btn flat label="Отменить" @click="comicStore.newFileCover = undefined" v-close-popup />
                 <q-btn flat label="Отправить" @click="comicStore.updateCover()" v-close-popup />
               </q-card-actions>
             </q-card>
           </q-dialog>
-          <q-btn v-if="comicStore.comic?.status == 'draft'" color="secondary" label="Опубликовать"
-            @click="comicStore.publishComic()" class="full-width q-mt-md" />
-          <q-btn color="primary" label="Редактировать" class="full-width q-mt-md" />
         </div>
       </div>
 
@@ -152,7 +153,6 @@ onMounted(async () => {
   .left-column {
     display: flex;
     flex-direction: column;
-    align-items: start;
     position: sticky;
     width: 30%;
   }

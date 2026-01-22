@@ -1,0 +1,1 @@
+import{_ as r}from"./_plugin-vue_export-helper-DlAUqK2U.js";import{X as s,W as o,I as t}from"./index-tdrjumzD.js";const a={};function n(c,e){return t(),s("div",null,[...e[0]||(e[0]=[o("h1",null,"This is a user page",-1)])])}const i=r(a,[["render",n]]);export{i as default};

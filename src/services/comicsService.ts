@@ -59,8 +59,17 @@ export class ComicsService {
     });
   }
 
-  async getChapterWithPages(comicId: string, chapterId: string) {
-    return await api.get('/comics/' + comicId + '/chapters/' + chapterId + '/pages');
+  async getChapterWithPages(
+    comicId: string,
+    chapterId: string,
+  ) {
+    return await api.get(
+      '/comics/' +
+        comicId +
+        '/chapters/' +
+        chapterId +
+        '/pages',
+    );
   }
 
   async getPageChapter(url: string) {
@@ -83,25 +92,21 @@ export class ComicsService {
     newYear: string,
     newDescription: string,
   ) {
+    const formData = new FormData();
+    formData.append('title', newTitle);
+      formData.append('description', newDescription);
+      formData.append('year', newYear);
+      formData.append('type', newType);
+      if (newTags) {
+        newTags.forEach((tag) => {
+          formData.append('tags[]', tag);
+        });
+      }
     if (typeof coverFile == 'undefined') {
-      return await api.post('/comics/', {
-        title: newTitle,
-        description: newDescription,
-        year: newYear,
-        type: newType,
-        tags: newTags,
-      });
+      return await api.post('/comics/', formData);
     } else {
-      const formData = new FormData();
       formData.append('cover_image', coverFile);
       return await api.post('/comics/', formData, {
-        params: {
-          title: newTitle,
-          description: newDescription,
-          year: newYear,
-          type: newType,
-          tags: newTags,
-        },
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -118,27 +123,38 @@ export class ComicsService {
   ) {
     const formData = new FormData();
     formData.append('pages_zip', pages);
-    if (newDecimal == null || typeof newDecimal == 'undefined') {
-      return await api.post('/comics/' + comicId + '/chapters', formData, {
-        params: {
-          chapter_number: newNumber,
-          title: newTitle,
+    if (
+      newDecimal == null ||
+      typeof newDecimal == 'undefined'
+    ) {
+      return await api.post(
+        '/comics/' + comicId + '/chapters',
+        formData,
+        {
+          params: {
+            chapter_number: newNumber,
+            title: newTitle,
+          },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      );
     } else {
-      return await api.post('/comics/' + comicId + '/chapters', formData, {
-        params: {
-          chapter_number: newNumber,
-          chapter_decimal: newDecimal,
-          title: newTitle,
+      return await api.post(
+        '/comics/' + comicId + '/chapters',
+        formData,
+        {
+          params: {
+            chapter_number: newNumber,
+            chapter_decimal: newDecimal,
+            title: newTitle,
+          },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         },
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      );
     }
   }
 }
